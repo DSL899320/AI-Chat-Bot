@@ -108,6 +108,453 @@ const demoOrders = {
     }
 };
 
+// Question Collection Data (loaded from question_collection.json)
+let questionCollection = [];
+
+// Load question collection from JSON file
+async function loadQuestionCollection() {
+    try {
+        const response = await fetch('./question_collection.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        questionCollection = data;
+        console.log('Question collection loaded successfully:', questionCollection.length, 'items');
+    } catch (error) {
+        console.error('Error loading question collection, using fallback data:', error);
+        // Complete fallback data with all problems
+        questionCollection = [
+            {
+                "id": 1,
+                "problem": "Delayed Deliveries – Packages arriving later than the estimated delivery date.",
+                "solution": "We're sorry your package is delayed. You can check the latest status using your tracking number. If it's significantly late, we'll help you file a claim or request compensation"
+            },
+            {
+                "id": 2,
+                "problem": "Lost or Misplaced Packages – Shipments not arriving or being marked as delivered but not received",
+                "solution": "We understand how frustrating this is. Please provide your tracking number, and we'll investigate the issue. If the package is confirmed lost, we'll guide you through the claim process"
+            },
+            {
+                "id": 3,
+                "problem": "Incorrect Address Handling – Errors in address input or system not validating addresses properly",
+                "solution": "It looks like there might be an issue with the address. You can update it from your dashboard before the shipment is dispatched. Need help? I can walk you through it"
+            },
+            {
+                "id": 4,
+                "problem": "Limited Delivery Options – Lack of flexibility in choosing delivery time slots or locations",
+                "solution": "We offer flexible delivery options including pickup points and lockers. Let me help you find the nearest available location or reschedule your delivery"
+            },
+            {
+                "id": 5,
+                "problem": "Inaccurate Tracking Updates – Tracking info not updating in real-time or showing incorrect status",
+                "solution": "Tracking updates may sometimes be delayed. I recommend checking back in a few hours. Meanwhile, I can notify you as soon as there's a change"
+            },
+            {
+                "id": 6,
+                "problem": "Tracking Number Not Found – System errors when entering a valid tracking number",
+                "solution": "That tracking number doesn't seem to be active yet. It can take a few hours after shipment. Let me monitor it for you and alert you when it's live"
+            },
+            {
+                "id": 7,
+                "problem": "No Notifications – Customers not receiving email/SMS updates about shipment status",
+                "solution": "You can enable SMS or email alerts in your profile settings. Would you like me to guide you through setting that up?"
+            },
+            {
+                "id": 8,
+                "problem": "Unexpected Charges – Hidden fees or unclear pricing breakdowns",
+                "solution": "We understand unexpected fees can be frustrating. I can help you review the breakdown of charges and clarify any surcharges or taxes"
+            },
+            {
+                "id": 9,
+                "problem": "Failed Transactions – Payment gateway errors or declined payments without clear reasons",
+                "solution": "If your payment didn't go through, try a different method or check your card details. I can also help you contact support if the issue persists"
+            },
+            {
+                "id": 10,
+                "problem": "Refund Delays – Slow processing of refunds for canceled or returned shipments",
+                "solution": "Refunds usually take 5–7 business days. I can check the status for you or help escalate the issue if it's taking longer"
+            },
+            {
+                "id": 11,
+                "problem": "Slow Website Performance – Pages loading slowly or timing out",
+                "solution": "Sorry for the inconvenience. Try refreshing the page or using a different browser. If the issue continues, I'll report it to our tech team"
+            },
+            {
+                "id": 12,
+                "problem": "Mobile App Bugs – Crashes, login issues, or missing features on mobile platforms",
+                "solution": "App issues can be annoying. Could you tell me what's happening? I'll help troubleshoot or report it for a fix"
+            },
+            {
+                "id": 13,
+                "problem": "Complex Navigation – Difficulty finding services like scheduling pickups or printing labels",
+                "solution": "Let me guide you step-by-step. What are you trying to do—schedule a pickup, track a package, or print a label?"
+            },
+            {
+                "id": 14,
+                "problem": "Login Failures – Trouble signing in due to password issues or account lockouts",
+                "solution": "If you're having trouble logging in, try resetting your password or clearing your browser cache. I can also help you recover your account"
+            },
+            {
+                "id": 15,
+                "problem": "Account Verification Delays – Slow or failed verification for new users or business accounts",
+                "solution": "Verification can take up to 24 hours. I'll check the status for you or help escalate it if it's taking longer than expected"
+            },
+            {
+                "id": 16,
+                "problem": "Customs Delays – Packages held up due to incomplete documentation or duties",
+                "solution": "Customs can sometimes hold packages for inspection. I can help you check the documentation and ensure everything is in order"
+            },
+            {
+                "id": 17,
+                "problem": "Language Barriers – Difficulty understanding shipping terms or instructions in non-native languages",
+                "solution": "I can assist you in multiple languages. Please let me know your preferred language, and I'll do my best to help"
+            }
+        ];
+        console.log('Fallback question collection loaded:', questionCollection.length, 'items');
+    }
+}
+
+// Fuzzy search functionality
+function fuzzySearch(query, items, threshold = 0.2) {
+    if (!query || query.length < 2) return [];
+    
+    console.log('Fuzzy search called with:', query, 'items count:', items.length);
+    
+    const queryLower = query.toLowerCase();
+    const results = [];
+    
+    items.forEach((item, index) => {
+        const problemLower = item.problem.toLowerCase();
+        let score = 0;
+        
+        // Simple contains check (most reliable)
+        if (problemLower.includes(queryLower)) {
+            score += 3;
+        }
+        
+        // Word-by-word matching
+        const queryWords = queryLower.split(' ').filter(word => word.length >= 2);
+        const problemWords = problemLower.split(' ').filter(word => word.length >= 2);
+        
+        queryWords.forEach(queryWord => {
+            problemWords.forEach(problemWord => {
+                if (problemWord.includes(queryWord)) {
+                    score += 2;
+                } else if (queryWord.includes(problemWord)) {
+                    score += 1;
+                }
+                
+                // Partial matching for typos
+                const similarity = calculateSimilarity(queryWord, problemWord);
+                if (similarity > 0.7) {
+                    score += similarity;
+                }
+            });
+        });
+        
+        // Normalize score
+        if (queryWords.length > 0) {
+            score = score / queryWords.length;
+        }
+        
+        console.log(`Item ${index}: "${item.problem}" - Score: ${score}`);
+        
+        if (score >= threshold) {
+            results.push({ ...item, score });
+        }
+    });
+    
+    const sortedResults = results.sort((a, b) => b.score - a.score).slice(0, 5);
+    console.log('Fuzzy search results:', sortedResults);
+    return sortedResults;
+}
+
+// Simple string similarity calculation
+function calculateSimilarity(str1, str2) {
+    const len1 = str1.length;
+    const len2 = str2.length;
+    
+    if (len1 === 0 || len2 === 0) return 0;
+    
+    let matches = 0;
+    const shorter = len1 < len2 ? str1 : str2;
+    const longer = len1 < len2 ? str2 : str1;
+    
+    for (let i = 0; i < shorter.length; i++) {
+        if (longer.includes(shorter[i])) {
+            matches++;
+        }
+    }
+    
+    return matches / longer.length;
+}
+
+// Auto-complete suggestions UI
+function showAutocompleteSuggestions(query) {
+    console.log('showAutocompleteSuggestions called with query:', query);
+    console.log('questionCollection length:', questionCollection.length);
+    
+    const suggestions = fuzzySearch(query, questionCollection);
+    console.log('Fuzzy search results:', suggestions);
+    
+    const chatInput = document.getElementById('chatInput');
+    const inputContainer = chatInput.parentElement;
+    
+    // Remove existing suggestions
+    const existingSuggestions = document.querySelector('.autocomplete-suggestions');
+    if (existingSuggestions) {
+        existingSuggestions.remove();
+    }
+    
+    if (suggestions.length === 0) {
+        console.log('No suggestions found for query:', query);
+        return;
+    }
+    
+    console.log('Creating suggestions dropdown with', suggestions.length, 'suggestions');
+    
+    // Create suggestions dropdown
+    const suggestionsDiv = document.createElement('div');
+    suggestionsDiv.className = 'autocomplete-suggestions';
+    suggestionsDiv.style.cssText = `
+        position: absolute;
+        top: -200px;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+    `;
+    
+    suggestions.forEach((suggestion, index) => {
+        const suggestionItem = document.createElement('div');
+        suggestionItem.className = 'suggestion-item';
+        suggestionItem.style.cssText = `
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+        `;
+        
+        suggestionItem.innerHTML = `
+            <div style="font-weight: 500; color: #333; margin-bottom: 4px;">
+                ${highlightMatch(suggestion.problem, query)}
+            </div>
+            <div style="font-size: 0.85em; color: #666; opacity: 0.8;">
+                Click to view solution
+            </div>
+        `;
+        
+        suggestionItem.addEventListener('mouseenter', () => {
+            suggestionItem.style.backgroundColor = '#f8f9fa';
+        });
+        
+        suggestionItem.addEventListener('mouseleave', () => {
+            suggestionItem.style.backgroundColor = 'white';
+        });
+        
+        suggestionItem.addEventListener('click', () => {
+            selectSuggestion(suggestion);
+            suggestionsDiv.remove();
+        });
+        
+        suggestionsDiv.appendChild(suggestionItem);
+    });
+    
+    // Add "Create Ticket" option if no perfect match
+    if (suggestions.length > 0 && suggestions[0].score < 0.8) {
+        const createTicketItem = document.createElement('div');
+        createTicketItem.className = 'suggestion-item create-ticket';
+        createTicketItem.style.cssText = `
+            padding: 12px 16px;
+            cursor: pointer;
+            background-color: #fff3cd;
+            border-top: 2px solid #ffc107;
+            color: #856404;
+            font-weight: 500;
+        `;
+        
+        createTicketItem.innerHTML = `
+            <i class="fas fa-plus-circle me-2"></i>
+            Create Custom Support Ticket
+            <div style="font-size: 0.85em; font-weight: normal; margin-top: 4px;">
+                Can't find your issue? Submit a custom ticket
+            </div>
+        `;
+        
+        createTicketItem.addEventListener('mouseenter', () => {
+            createTicketItem.style.backgroundColor = '#fff3b8';
+        });
+        
+        createTicketItem.addEventListener('mouseleave', () => {
+            createTicketItem.style.backgroundColor = '#fff3cd';
+        });
+        
+        createTicketItem.addEventListener('click', () => {
+            showCreateTicketForm(query);
+            suggestionsDiv.remove();
+        });
+        
+        suggestionsDiv.appendChild(createTicketItem);
+    }
+    
+    inputContainer.style.position = 'relative';
+    inputContainer.appendChild(suggestionsDiv);
+}
+
+// Highlight matching text
+function highlightMatch(text, query) {
+    if (!query || query.length < 2) return text;
+    
+    const queryWords = query.toLowerCase().split(' ').filter(word => word.length >= 2);
+    let highlightedText = text;
+    
+    queryWords.forEach(word => {
+        const regex = new RegExp(`(${word})`, 'gi');
+        highlightedText = highlightedText.replace(regex, '<mark style="background-color: #fff3cd; padding: 1px 2px;">$1</mark>');
+    });
+    
+    return highlightedText;
+}
+
+// Select a suggestion and show solution
+function selectSuggestion(suggestion) {
+    const chatInput = document.getElementById('chatInput');
+    chatInput.value = '';
+    
+    // Add user message
+    addChatMessage(suggestion.problem, 'user');
+    
+    // Add bot response with solution
+    setTimeout(() => {
+        let response = `✅ **Solution Found!**\n\n`;
+        response += `📋 **Problem:** ${suggestion.problem}\n\n`;
+        response += `💡 **Solution:** ${suggestion.solution}\n\n`;
+        response += `🎯 **Need more help?**\n`;
+        response += `• Type "create ticket" for personalized support\n`;
+        response += `• Type "faq" for more common issues\n`;
+        response += `• Type "agent" to speak with a human`;
+        
+        addChatMessage(response, 'bot');
+    }, 1000);
+}
+
+// Show create ticket form
+function showCreateTicketForm(initialText = '') {
+    const chatMessages = document.getElementById('chatMessages');
+    
+    const formContainer = document.createElement('div');
+    formContainer.className = 'bot-message mt-2';
+    
+    const formDiv = document.createElement('div');
+    formDiv.className = 'message-content bg-white p-3 rounded border';
+    
+    let formHTML = `
+        <div class="create-ticket-form">
+            <h6 class="text-warning mb-3">
+                <i class="fas fa-ticket-alt me-2"></i>Create Support Ticket
+            </h6>
+            <div class="mb-3">
+                <label for="ticketSubject" class="form-label">Subject:</label>
+                <input type="text" class="form-control" id="ticketSubject" 
+                       placeholder="Brief description of your issue" maxlength="100">
+            </div>
+            <div class="mb-3">
+                <label for="ticketDescription" class="form-label">Description:</label>
+                <textarea class="form-control" id="ticketDescription" rows="4"
+                         placeholder="Please describe your issue in detail...">${initialText}</textarea>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="ticketPriority" class="form-label">Priority:</label>
+                    <select class="form-select" id="ticketPriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="ticketCategory" class="form-label">Category:</label>
+                    <select class="form-select" id="ticketCategory">
+                        <option value="delivery">Delivery Issue</option>
+                        <option value="payment">Payment Issue</option>
+                        <option value="tracking">Tracking Issue</option>
+                        <option value="technical">Technical Issue</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-warning btn-sm" 
+                        onclick="submitCustomTicket()">
+                    <i class="fas fa-paper-plane me-1"></i>Submit Ticket
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" 
+                        onclick="this.closest('.bot-message').remove()">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+            </div>
+        </div>
+    `;
+    
+    formDiv.innerHTML = formHTML;
+    formContainer.appendChild(formDiv);
+    chatMessages.appendChild(formContainer);
+    
+    // Focus on subject input
+    setTimeout(() => {
+        document.getElementById('ticketSubject').focus();
+    }, 100);
+    
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Submit custom ticket
+function submitCustomTicket() {
+    const subject = document.getElementById('ticketSubject').value.trim();
+    const description = document.getElementById('ticketDescription').value.trim();
+    const priority = document.getElementById('ticketPriority').value;
+    const category = document.getElementById('ticketCategory').value;
+    
+    if (!subject || !description) {
+        alert('Please fill in both subject and description fields.');
+        return;
+    }
+    
+    // Generate ticket ID
+    const ticketId = 'TKT' + Date.now().toString().slice(-6);
+    
+    // Remove the form
+    document.querySelector('.create-ticket-form').closest('.bot-message').remove();
+    
+    // Add user message
+    addChatMessage(`Custom Support Ticket: ${subject}`, 'user');
+    
+    // Add bot response
+    setTimeout(() => {
+        let response = `🎫 **Support Ticket Created Successfully!**\n\n`;
+        response += `📋 **Ticket ID:** ${ticketId}\n`;
+        response += `📌 **Subject:** ${subject}\n`;
+        response += `🏷️ **Category:** ${category.charAt(0).toUpperCase() + category.slice(1)}\n`;
+        response += `⚡ **Priority:** ${priority.charAt(0).toUpperCase() + priority.slice(1)}\n\n`;
+        response += `📝 **Description:** ${description}\n\n`;
+        response += `⏰ **Next Steps:**\n`;
+        response += `• You'll receive an email confirmation within 5 minutes\n`;
+        response += `• Our support team will respond within 24 hours\n`;
+        response += `• Track your ticket status at support.logitrack.com\n\n`;
+        response += `💡 **Reference:** Save ticket ID ${ticketId} for future reference`;
+        
+        addChatMessage(response, 'bot');
+    }, 1000);
+}
+
 // Global Variables
 let chatbotOpen = true;
 let currentUser = null;
@@ -133,6 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     setupEventListeners();
     loadDemoData();
+    loadQuestionCollection(); // Load question collection on app initialization
 });
 
 // Initialize Application
@@ -199,12 +647,47 @@ function setupEventListeners() {
         contactForm.addEventListener('submit', handleContact);
     }
     
-    // Chat input enter key
+    // Chat input enter key and autocomplete
     const chatInput = document.getElementById('chatInput');
+    console.log('Chat input element found:', chatInput);
     if (chatInput) {
+        console.log('Setting up chat input event listeners');
         chatInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 sendMessage();
+            }
+        });
+        
+        // Add autocomplete functionality
+        let autocompleteTimeout;
+        chatInput.addEventListener('input', function(e) {
+            console.log('Input event triggered, value:', e.target.value);
+            clearTimeout(autocompleteTimeout);
+            const query = e.target.value.trim();
+            
+            if (query.length >= 2) {
+                console.log('Query length >= 2, setting timeout for:', query);
+                autocompleteTimeout = setTimeout(() => {
+                    console.log('Timeout executed, calling showAutocompleteSuggestions');
+                    showAutocompleteSuggestions(query);
+                }, 300);
+            } else {
+                console.log('Query too short, hiding suggestions');
+                // Hide suggestions if query is too short
+                const existingSuggestions = document.querySelector('.autocomplete-suggestions');
+                if (existingSuggestions) {
+                    existingSuggestions.remove();
+                }
+            }
+        });
+        
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!chatInput.contains(e.target) && !e.target.closest('.autocomplete-suggestions')) {
+                const existingSuggestions = document.querySelector('.autocomplete-suggestions');
+                if (existingSuggestions) {
+                    existingSuggestions.remove();
+                }
             }
         });
     }
@@ -860,6 +1343,29 @@ function generateBotResponse(userMessage) {
         return getOrderStatusResponse(orderId);
     }
     
+    // Smart search through question collection first
+    if (questionCollection.length > 0 && userMessage.length >= 3) {
+        const suggestions = fuzzySearch(userMessage, questionCollection, 0.4);
+        if (suggestions.length > 0 && suggestions[0].score > 0.6) {
+            // High confidence match - return solution directly
+            const topMatch = suggestions[0];
+            let response = `✅ **I found a solution for you!**\n\n`;
+            response += `📋 **Issue:** ${topMatch.problem}\n\n`;
+            response += `💡 **Solution:** ${topMatch.solution}\n\n`;
+            response += `🎯 **Was this helpful?**\n`;
+            response += `• Type "yes" if this solved your issue\n`;
+            response += `• Type "create ticket" for more personalized help\n`;
+            response += `• Type "faq" to see more options`;
+            return response;
+        }
+    }
+    
+    // Handle create ticket requests
+    if (lowerMessage.includes('create ticket') || lowerMessage.includes('custom ticket') || lowerMessage.includes('submit ticket')) {
+        setTimeout(() => showCreateTicketForm(userMessage), 500);
+        return "🎫 **Creating a support ticket** - Please fill out the form below:";
+    }
+    
     // Handle FAQ requests
     if (lowerMessage.includes('faq') || lowerMessage.includes('help with') || lowerMessage.includes('questions')) {
         setTimeout(() => addFAQButtonsToChat(), 500);
@@ -954,7 +1460,21 @@ function generateBotResponse(userMessage) {
     } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
         return 'Hello! I\'m your AI assistant. Write "faq" to start your journey!';
     } else {
-        return 'I understand you\'re asking about "' + userMessage + '". While I\'m still learning, I can help you with tracking packages, creating orders, delivery information, and general support. Is there something specific I can assist you with?';
+        // If no specific match found, suggest smart search or ticket creation
+        let response = `🤔 I'm not sure about "${userMessage}", but I can help you in several ways:\n\n`;
+        response += `💡 **Smart Suggestions:**\n`;
+        response += `• Try typing more details about your issue\n`;
+        response += `• I'll automatically suggest solutions as you type!\n\n`;
+        response += `🎯 **Quick Options:**\n`;
+        response += `• Type "faq" to see common issues\n`;
+        response += `• Type "create ticket" for custom support\n`;
+        response += `• Type "track" to check package status\n\n`;
+        response += `💬 **Tip:** The more specific you are, the better I can help!`;
+        
+        // Show FAQ buttons as fallback
+        setTimeout(() => addFAQButtonsToChat(), 1000);
+        
+        return response;
     }
 }
 
@@ -1263,7 +1783,7 @@ function getOrderHistoryResponse(orderId) {
         const icon = isLatest ? '🔴' : '✅';
         response += `${icon} **${event.status}**\n`;
         response += `   📅 ${event.date}\n`;
-        response += `   📍 ${event.location}\n\n`;
+               response += `   📍 ${event.location}\n\n`;
     });
     
     if (order.exception) {
@@ -1847,7 +2367,7 @@ function handleMissedDeliveryWithId(orderId) {
 function handlePerishableWithId(orderId) {
     const order = demoOrders[orderId];
     if (!order) {
-               addChatMessage(`❌ Order ${orderId} not found. Please check your order ID.`, 'bot');
+        addChatMessage(`❌ Order ${orderId} not found. Please check your order ID.`, 'bot');
         return;
     }
     
@@ -2115,4 +2635,49 @@ function submitDeliveryInstructions(orderId) {
         
         addChatMessage(response, 'bot');
     }, 1000);
+}
+
+// Initialize application when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Load question collection from JSON file
+    loadQuestionCollection();
+    
+    // Test autocomplete after a delay to ensure question collection is loaded
+    setTimeout(() => {
+        testAutocomplete();
+    }, 2000);
+    
+    // Initialize chatbot with welcome message
+    setTimeout(() => {
+        const welcomeMessage = `🤖 **Welcome to LogiTrack AI Support!**\n\n` +
+                              `I can help you with:\n` +
+                              `• 📦 Package tracking and delivery issues\n` +
+                              `• 🔍 Quick solutions to common problems\n` +
+                              `• 🎫 Creating support tickets\n` +
+                              `• 📋 FAQ assistance\n\n` +
+                              `💡 **Tip:** Start typing your issue and I'll suggest solutions!`;
+        
+        addChatMessage(welcomeMessage, 'bot');
+        
+        // Show FAQ buttons after welcome message
+        setTimeout(() => {
+            addFAQButtonsToChat();
+        }, 1500);
+    }, 500);
+});
+
+// Test function for autocomplete
+function testAutocomplete() {
+    console.log('Testing autocomplete functionality...');
+    console.log('Question collection status:', questionCollection.length, 'items loaded');
+    
+    // Test fuzzy search directly
+    const testQuery = 'delayed';
+    const testResults = fuzzySearch(testQuery, questionCollection);
+    console.log('Test search for "delayed":', testResults);
+    
+    // Test another query
+    const testQuery2 = 'lost package';
+    const testResults2 = fuzzySearch(testQuery2, questionCollection);
+    console.log('Test search for "lost package":', testResults2);
 }
