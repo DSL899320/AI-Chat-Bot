@@ -1,0 +1,87 @@
+[
+    {
+        "id": 1,
+        "problem": "Delayed Deliveries – Packages arriving later than the estimated delivery date.",
+        "solution": "We're sorry your package is delayed. You can check the latest status using your tracking number. If it's significantly late, we’ll help you file a claim or request compensation"
+    },
+    {
+        "id": 2,
+        "problem": "Lost or Misplaced Packages – Shipments not arriving or being marked as delivered but not received",
+        "solution": "We understand how frustrating this is. Please provide your tracking number, and we’ll investigate the issue. If the package is confirmed lost, we’ll guide you through the claim process"
+    },
+    {
+        "id": 3,
+        "problem": "Incorrect Address Handling – Errors in address input or system not validating addresses properly",
+        "solution": "It looks like there might be an issue with the address. You can update it from your dashboard before the shipment is dispatched. Need help? I can walk you through it"
+    },
+    {
+        "id": 4,
+        "problem": "Limited Delivery Options – Lack of flexibility in choosing delivery time slots or locations",
+        "solution": "We offer flexible delivery options including pickup points and lockers. Let me help you find the nearest available location or reschedule your delivery"
+    },
+    {
+        "id": 5,
+        "problem": "Inaccurate Tracking Updates – Tracking info not updating in real-time or showing incorrect status",
+        "solution": "Tracking updates may sometimes be delayed. I recommend checking back in a few hours. Meanwhile, I can notify you as soon as there's a change"
+    },
+    {
+        "id": 6,
+        "problem": "Tracking Number Not Found – System errors when entering a valid tracking number",
+        "solution": "That tracking number doesn’t seem to be active yet. It can take a few hours after shipment. Let me monitor it for you and alert you when it’s live"
+    },
+    {
+        "id": 7,
+        "problem": "No Notifications – Customers not receiving email/SMS updates about shipment status",
+        "solution": "You can enable SMS or email alerts in your profile settings. Would you like me to guide you through setting that up?"
+    },
+    {
+        "id": 8,
+        "problem": "Unexpected Charges – Hidden fees or unclear pricing breakdowns",
+        "solution": "We understand unexpected fees can be frustrating. I can help you review the breakdown of charges and clarify any surcharges or taxes"
+    },
+    {
+        "id": 9,
+        "problem": "Failed Transactions – Payment gateway errors or declined payments without clear reasons",
+        "solution": "If your payment didn’t go through, try a different method or check your card details. I can also help you contact support if the issue persists"
+    },
+    {
+        "id": 10,
+        "problem": "Refund Delays – Slow processing of refunds for canceled or returned shipments",
+        "solution": "Refunds usually take 5–7 business days. I can check the status for you or help escalate the issue if it's taking longer"
+    },
+    {
+        "id": 11,
+        "problem": "Slow Website Performance – Pages loading slowly or timing out",
+        "solution": "Sorry for the inconvenience. Try refreshing the page or using a different browser. If the issue continues, I’ll report it to our tech team"
+    },
+    {
+        "id": 12,
+        "problem": "Mobile App Bugs – Crashes, login issues, or missing features on mobile platforms",
+        "solution": "App issues can be annoying. Could you tell me what’s happening? I’ll help troubleshoot or report it for a fix"
+    },
+    {
+        "id": 13,
+        "problem": "Complex Navigation – Difficulty finding services like scheduling pickups or printing labels",
+        "solution": "Let me guide you step-by-step. What are you trying to do—schedule a pickup, track a package, or print a label?"
+    },
+    {
+        "id": 14,
+        "problem": "Login Failures – Trouble signing in due to password issues or account lockouts",
+        "solution": "If you're having trouble logging in, try resetting your password or clearing your browser cache. I can also help you recover your account"
+    },
+    {
+        "id": 15,
+        "problem": "Account Verification Delays – Slow or failed verification for new users or business accounts",
+        "solution": "Verification can take up to 24 hours. I’ll check the status for you or help escalate it if it’s taking longer than expected"
+    },
+    {
+        "id": 16,
+        "problem": "Customs Delays – Packages held up due to incomplete documentation or duties",
+        "solution": "Customs can sometimes hold packages for inspection. I can help you check the documentation and ensure everything is in order"
+    },
+    {
+        "id": 17,
+        "problem": "Language Barriers – Difficulty understanding shipping terms or instructions in non-native languages",
+        "solution": "I can assist you in multiple languages. Please let me know your preferred language, and I’ll do my best to help"
+    }
+]
