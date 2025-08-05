@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiTrack - Modern Logistics Platform</title>
+    
+    <!-- Bootstrap 5.3.0 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6.0.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#home">
+                <i class="fas fa-truck-fast me-2"></i>LogiTrack
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tracking">Track Order</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fas fa-user me-1"></i>Login
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="display-4 fw-bold text-white mb-4">
+                            Modern Logistics <span class="text-warning">Made Simple</span>
+                        </h1>
+                        <p class="lead text-white-50 mb-4">
+                            Real-time tracking, AI-powered support, and seamless delivery management for your business needs.
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <button class="btn btn-warning btn-lg px-4" onclick="scrollToSection('tracking')">
+                                <i class="fas fa-search me-2"></i>Track Package
+                            </button>
+                            <button class="btn btn-outline-light btn-lg px-4" data-bs-toggle="modal" data-bs-target="#newOrderModal">
+                                <i class="fas fa-plus me-2"></i>New Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image text-center">
+                        <i class="fas fa-shipping-fast hero-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Track Section -->
+    <section id="tracking" class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body p-4">
+                            <h2 class="text-center mb-4">
+                                <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                Track Your Order
+                            </h2>
+                            <form id="trackingForm">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="trackingNumber" placeholder="Enter tracking number" required>
+                                            <label for="trackingNumber">Enter Tracking Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-primary btn-lg w-100 h-100">
+                                            <i class="fas fa-search me-2"></i>Track
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <!-- Tracking Results -->
+                            <div id="trackingResults" class="mt-4 d-none">
+                                <div class="alert alert-success" role="alert">
+                                    <h5 class="alert-heading">
+                                        <i class="fas fa-check-circle me-2"></i>Package Found!
+                                    </h5>
+                                    <div id="trackingDetails"></div>
+                                </div>
+                                
+                                <!-- Progress Timeline -->
+                                <div class="tracking-timeline mt-4">
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h6>Order Confirmed</h6>
+                                            <p class="text-muted mb-0">Your order has been confirmed and is being prepared</p>
+                                            <small class="text-muted">2 hours ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h6>In Transit</h6>
+                                            <p class="text-muted mb-0">Package is on its way to destination</p>
+                                            <small class="text-muted">1 hour ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item active">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-truck"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h6>Out for Delivery</h6>
+                                            <p class="text-muted mb-0">Package is out for delivery in your area</p>
+                                            <small class="text-muted">30 minutes ago</small>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h6>Delivered</h6>
+                                            <p class="text-muted mb-0">Package delivered successfully</p>
+                                            <small class="text-muted">Estimated: Today 3:00 PM</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Delivery Person Contact (Out for Delivery) -->
+                                <div id="deliveryPersonContact" class="mt-4 d-none">
+                                    <div class="card border-primary">
+                                        <div class="card-header bg-primary text-white">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-user-tie me-2"></i>
+                                                Your Delivery Person
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-3 text-center">
+                                                    <div class="delivery-person-avatar mb-2">
+                                                        <i class="fas fa-user-circle"></i>
+                                                    </div>
+                                                    <span class="badge bg-success">On Duty</span>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="delivery-person-info">
+                                                        <h6 class="mb-1" id="deliveryPersonName">John Smith</h6>
+                                                        <p class="text-muted mb-2">Delivery Executive • 4.8 ⭐ (127 deliveries)</p>
+                                                        <div class="contact-options">
+                                                            <div class="row g-2">
+                                                                <div class="col-md-6">
+                                                                    <a href="#" class="btn btn-outline-primary btn-sm w-100" id="callDeliveryPerson">
+                                                                        <i class="fas fa-phone me-1"></i>
+                                                                        <span id="deliveryPersonPhone">+1 (555) 123-4567</span>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <button class="btn btn-outline-success btn-sm w-100" onclick="chatWithDeliveryPerson()">
+                                                                        <i class="fas fa-comments me-1"></i>
+                                                                        Chat
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-2 mt-1">
+                                                                <div class="col-md-6">
+                                                                    <button class="btn btn-outline-info btn-sm w-100" onclick="showRealTimeLocation()">
+                                                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                                                        Real-Time Map
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <button class="btn btn-outline-warning btn-sm w-100" onclick="rescheduleDelivery()">
+                                                                        <i class="fas fa-calendar-alt me-1"></i>
+                                                                        Reschedule
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-2 mt-1">
+                                                                <div class="col-md-6">
+                                                                    <button class="btn btn-outline-danger btn-sm w-100" onclick="escalateToHumanSupport()">
+                                                                        <i class="fas fa-user-headset me-1"></i>
+                                                                        Human Support
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <button class="btn btn-outline-secondary btn-sm w-100" onclick="trackDeliveryPersonLocation()">
+                                                                        <i class="fas fa-route me-1"></i>
+                                                                        Track Location
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="delivery-eta mt-3">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="fas fa-clock text-warning me-2"></i>
+                                                                <span class="fw-bold text-primary">ETA: <span id="deliveryETA">15-20 minutes</span></span>
+                                                            </div>
+                                                            <div class="progress mt-2" style="height: 6px;">
+                                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 75%"></div>
+                                                            </div>
+                                                            <small class="text-muted">Last updated: 2 minutes ago</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Quick Actions -->
+                                            <hr class="my-3">
+                                                <div class="quick-actions">
+                                                <h6 class="fw-bold mb-2">Quick Actions</h6>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    <button class="btn btn-light btn-sm" onclick="addDeliveryInstructions()">
+                                                        <i class="fas fa-sticky-note me-1"></i>
+                                                        Add Instructions
+                                                    </button>
+                                                    <button class="btn btn-light btn-sm" onclick="shareLocation()">
+                                                        <i class="fas fa-share-alt me-1"></i>
+                                                        Share My Location
+                                                    </button>
+                                                    <button class="btn btn-light btn-sm" onclick="notifyArrival()">
+                                                        <i class="fas fa-bell me-1"></i>
+                                                        Notify on Arrival
+                                                    </button>
+                                                    <button class="btn btn-primary btn-sm" onclick="showMyOrderLocation()">
+                                                        <i class="fas fa-map-marked-alt me-1"></i>
+                                                        Track My Order
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Complaint/Feedback Section -->
+                                <div id="complaintSection" class="mt-4 d-none">
+                                    <div class="card border-warning">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                Issues with your delivery?
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="text-muted mb-3">We're sorry to hear you had an issue. Please let us know what happened so we can make it right.</p>
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#complaintModal">
+                                                    <i class="fas fa-file-alt me-1"></i>File Complaint
+                                                </button>
+                                                <button class="btn btn-outline-info btn-sm" onclick="contactSupport()">
+                                                    <i class="fas fa-headset me-1"></i>Contact Support
+                                                </button>
+                                                <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                                                    <i class="fas fa-star me-1"></i>Leave Feedback
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="display-5 fw-bold">Our Services</h2>
+                    <p class="lead text-muted">Comprehensive logistics solutions for your business</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <h5>Express Delivery</h5>
+                        <p class="text-muted">Same-day and next-day delivery options for urgent shipments</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h5>International Shipping</h5>
+                        <p class="text-muted">Worldwide delivery with customs handling and documentation</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <h5>Warehousing</h5>
+                        <p class="text-muted">Secure storage solutions with inventory management</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h5>Route Optimization</h5>
+                        <p class="text-muted">AI-powered route planning for efficient deliveries</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h5>Mobile Tracking</h5>
+                        <p class="text-muted">Real-time package tracking on any device</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h5>24/7 Support</h5>
+                        <p class="text-muted">Round-the-clock customer support with AI assistance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="display-5 fw-bold">Get In Touch</h2>
+                    <p class="lead text-muted">Need help? Our AI assistant is here 24/7</p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow border-0">
+                        <div class="card-body p-4">
+                            <form id="contactForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" id="name" placeholder="Your Name" required>
+                                            <label for="name">Your Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            <input type="email" class="form-control" id="email" placeholder="Your Email" required>
+                                            <label for="email">Your Email</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                                    <label for="subject">Subject</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" id="message" style="height: 120px" placeholder="Your Message" required></textarea>
+                                    <label for="message">Your Message</label>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="loginModalLabel">
+                        <i class="fas fa-user-circle me-2"></i>Login to LogiTrack
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="loginEmail" placeholder="name@example.com" required>
+                            <label for="loginEmail">Email address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                            <label for="loginPassword">Password</label>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">
+                                    Remember me
+                                </label>
+                            </div>
+                            <a href="#" class="text-decoration-none">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </button>
+                        <div class="text-center">
+                            <span class="text-muted">Don't have an account? </span>
+                            <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#signupModal" data-bs-dismiss="modal">Sign up</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="signupModalLabel">
+                        <i class="fas fa-user-plus me-2"></i>Join LogiTrack
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="signupForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                                    <label for="firstName">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                                    <label for="lastName">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="signupEmail" placeholder="name@example.com" required>
+                            <label for="signupEmail">Email address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control" id="phone" placeholder="Phone Number" required>
+                            <label for="phone">Phone Number</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
+                            <label for="signupPassword">Password</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                            <label for="confirmPassword">Confirm Password</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+                        <div class="text-center">
+                            <span class="text-muted">Already have an account? </span>
+                            <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Sign in</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Order Modal -->
+    <div class="modal fade" id="newOrderModal" tabindex="-1" aria-labelledby="newOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newOrderModalLabel">
+                        <i class="fas fa-plus-circle me-2"></i>Create New Order
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newOrderForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3">Sender Information</h6>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="senderName" placeholder="Sender Name" required>
+                                    <label for="senderName">Sender Name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="tel" class="form-control" id="senderPhone" placeholder="Sender Phone" required>
+                                    <label for="senderPhone">Sender Phone</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" id="senderAddress" style="height: 100px" placeholder="Sender Address" required></textarea>
+                                    <label for="senderAddress">Sender Address</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3">Recipient Information</h6>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="recipientName" placeholder="Recipient Name" required>
+                                    <label for="recipientName">Recipient Name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="tel" class="form-control" id="recipientPhone" placeholder="Recipient Phone" required>
+                                    <label for="recipientPhone">Recipient Phone</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" id="recipientAddress" style="height: 100px" placeholder="Recipient Address" required></textarea>
+                                    <label for="recipientAddress">Recipient Address</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="packageType" required>
+                                        <option value="">Select Package Type</option>
+                                        <option value="document">Document</option>
+                                        <option value="package">Package</option>
+                                        <option value="fragile">Fragile Item</option>
+                                        <option value="electronics">Electronics</option>
+                                    </select>
+                                    <label for="packageType">Package Type</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="deliveryType" required>
+                                        <option value="">Select Delivery Type</option>
+                                        <option value="standard">Standard (3-5 days)</option>
+                                        <option value="express">Express (1-2 days)</option>
+                                        <option value="overnight">Overnight</option>
+                                        <option value="same-day">Same Day</option>
+                                    </select>
+                                    <label for="deliveryType">Delivery Type</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input type="number" class="form-control" id="weight" placeholder="Weight (kg)" step="0.1" required>
+                                    <label for="weight">Weight (kg)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input type="number" class="form-control" id="length" placeholder="Length (cm)" required>
+                                    <label for="length">Length (cm)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input type="number" class="form-control" id="width" placeholder="Width (cm)" required>
+                                    <label for="width">Width (cm)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="specialInstructions" style="height: 80px" placeholder="Special Instructions (Optional)"></textarea>
+                            <label for="specialInstructions">Special Instructions (Optional)</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="newOrderForm" class="btn btn-primary">
+                        <i class="fas fa-check me-2"></i>Create Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div id="chatbot" class="chatbot-container">
+        <div class="chatbot-header" onclick="toggleChat()">
+            <i class="fas fa-robot me-2"></i>
+            <span>AI Assistant</span>
+            <i class="fas fa-chevron-up" id="chatToggleIcon"></i>
+        </div>
+        <div class="chatbot-body" id="chatbotBody">
+            <div class="chat-messages" id="chatMessages">
+                <div class="bot-message">
+                    <div class="message-content">
+                        <i class="fas fa-robot me-2"></i>
+                        Hello! I'm your AI assistant. How can I help you today?
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="chatInput" placeholder="Type your message...">
+                    <button class="btn btn-primary" type="button" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-truck-fast me-2"></i>LogiTrack
+                    </h5>
+                    <p class="text-white-50">
+                        Modern logistics platform providing real-time tracking, AI-powered support, and seamless delivery management.
+                    </p>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3">Services</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 text-decoration-none">Express Delivery</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">International</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Warehousing</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Tracking</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3">Support</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50 text-decoration-none">Help Center</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Contact Us</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">API Docs</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Status</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h6 class="fw-bold mb-3">Stay Connected</h6>
+                    <p class="text-white-50">Get updates on your shipments and new features.</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Enter your email">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="text-white-50 me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white-50 me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white-50 me-3"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="text-white-50 mb-0">&copy; 2025 LogiTrack. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
+                    <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Complaint Modal -->
+    <div class="modal fade" id="complaintModal" tabindex="-1" aria-labelledby="complaintModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="complaintModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>File a Complaint
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="complaintForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="complaintTrackingNumber" placeholder="Tracking Number" required>
+                                    <label for="complaintTrackingNumber">Tracking Number</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="complaintType" required>
+                                        <option value="">Select Issue Type</option>
+                                        <option value="damaged">Package Damaged</option>
+                                        <option value="late">Late Delivery</option>
+                                        <option value="missing">Package Missing/Lost</option>
+                                        <option value="wrong-address">Wrong Delivery Address</option>
+                                        <option value="poor-service">Poor Customer Service</option>
+                                        <option value="billing">Billing Issue</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <label for="complaintType">Issue Type</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select class="form-select" id="complaintPriority" required>
+                                        <option value="">Select Priority</option>
+                                        <option value="low">Low - Minor inconvenience</option>
+                                        <option value="medium">Medium - Moderate impact</option>
+                                        <option value="high">High - Significant impact</option>
+                                        <option value="urgent">Urgent - Critical issue</option>
+                                    </select>
+                                    <label for="complaintPriority">Priority Level</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="date" class="form-control" id="incidentDate" required>
+                                    <label for="incidentDate">Date of Incident</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="complaintSubject" placeholder="Brief subject" required>
+                            <label for="complaintSubject">Subject</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="complaintDescription" style="height: 120px" placeholder="Describe the issue in detail" required></textarea>
+                            <label for="complaintDescription">Detailed Description</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="desiredResolution" placeholder="What would you like us to do?">
+                            <label for="desiredResolution">Desired Resolution (Optional)</label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="attachments" class="form-label">Attach Photos/Documents (Optional)</label>
+                            <input type="file" class="form-control" id="attachments" multiple accept="image/*,.pdf,.doc,.docx">
+                            <div class="form-text">Accepted formats: Images, PDF, Word documents (Max 5MB each)</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="complaintName" placeholder="Your Name" required>
+                                    <label for="complaintName">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="complaintEmail" placeholder="Your Email" required>
+                                    <label for="complaintEmail">Your Email</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control" id="complaintPhone" placeholder="Your Phone Number">
+                            <label for="complaintPhone">Phone Number (Optional)</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="complaintForm" class="btn btn-warning">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Complaint
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="feedbackModalLabel">
+                        <i class="fas fa-star me-2"></i>Leave Feedback
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="feedbackTrackingNumber" placeholder="Tracking Number" required>
+                            <label for="feedbackTrackingNumber">Tracking Number</label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Overall Rating</label>
+                            <div class="rating-stars" id="overallRating">
+                                <span class="star" data-rating="1">★</span>
+                                <span class="star" data-rating="2">★</span>
+                                <span class="star" data-rating="3">★</span>
+                                <span class="star" data-rating="4">★</span>
+                                <span class="star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Delivery Speed</label>
+                                <div class="rating-stars delivery-speed">
+                                    <span class="star" data-rating="1">★</span>
+                                    <span class="star" data-rating="2">★</span>
+                                    <span class="star" data-rating="3">★</span>
+                                    <span class="star" data-rating="4">★</span>
+                                    <span class="star" data-rating="5">★</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Package Condition</label>
+                                <div class="rating-stars package-condition">
+                                    <span class="star" data-rating="1">★</span>
+                                    <span class="star" data-rating="2">★</span>
+                                    <span class="star" data-rating="3">★</span>
+                                    <span class="star" data-rating="4">★</span>
+                                    <span class="star" data-rating="5">★</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="feedbackComments" style="height: 100px" placeholder="Tell us about your experience"></textarea>
+                            <label for="feedbackComments">Comments (Optional)</label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="recommendService">
+                            <label class="form-check-label" for="recommendService">
+                                I would recommend LogiTrack to others
+                            </label>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="feedbackName" placeholder="Your Name" required>
+                                    <label for="feedbackName">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="feedbackEmail" placeholder="Your Email" required>
+                                    <label for="feedbackEmail">Your Email</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="feedbackForm" class="btn btn-success">
+                        <i class="fas fa-heart me-2"></i>Submit Feedback
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Location Tracking Modal -->
+    <div class="modal fade" id="orderLocationModal" tabindex="-1" aria-labelledby="orderLocationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="orderLocationModalLabel">
+                        <i class="fas fa-map-marked-alt me-2"></i>Track My Order Location
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <!-- Order Location Map Container -->
+                    <div id="orderLocationMap" class="order-location-map">
+                        <div class="order-map-overlay">
+                            <div class="order-info-panel">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="order-icon me-3">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1" id="orderTrackingNumber">Tracking: LT12345678</h6>
+                                        <small class="text-muted">Your Package</small>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <span class="badge bg-warning pulse-animation">OUT FOR DELIVERY</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="order-location-details">
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <div class="location-stat">
+                                                <i class="fas fa-map-marker-alt text-success"></i>
+                                                <div class="ms-2">
+                                                    <small class="text-muted d-block">Current Location</small>
+                                                    <span class="fw-bold" id="orderCurrentLocation">Downtown Hub</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="location-stat">
+                                                <i class="fas fa-route text-primary"></i>
+                                                <div class="ms-2">
+                                                    <small class="text-muted d-block">Distance to You</small>
+                                                    <span class="fw-bold" id="orderDistanceToMe">2.8 km</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="location-stat">
+                                                <i class="fas fa-clock text-info"></i>
+                                                <div class="ms-2">
+                                                    <small class="text-muted d-block">Estimated Arrival</small>
+                                                    <span class="fw-bold" id="orderETA">18 minutes</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="location-stat">
+                                                <i class="fas fa-truck text-warning"></i>
+                                                <div class="ms-2">
+                                                    <small class="text-muted d-block">Delivery Vehicle</small>
+                                                    <span class="fw-bold" id="orderVehicleInfo">Van #DL-2847</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <div class="order-journey-progress">
+                                        <h6 class="fw-bold mb-2">Delivery Journey</h6>
+                                        <div class="journey-steps">
+                                            <div class="journey-step completed">
+                                                <div class="step-marker">1</div>
+                                                <div class="step-content">
+                                                    <small>Pickup from Warehouse</small>
+                                                    <div class="step-time">✓ Completed</div>
+                                                </div>
+                                            </div>
+                                            <div class="journey-step completed">
+                                                <div class="step-marker">2</div>
+                                                <div class="step-content">
+                                                    <small>Sorting Facility</small>
+                                                    <div class="step-time">✓ Completed</div>
+                                                </div>
+                                            </div>
+                                            <div class="journey-step active">
+                                                <div class="step-marker">3</div>
+                                                <div class="step-content">
+                                                    <small>Out for Delivery</small>
+                                                    <div class="step-time">📍 Current</div>
+                                                </div>
+                                            </div>
+                                            <div class="journey-step">
+                                                <div class="step-marker">4</div>
+                                                <div class="step-content">
+                                                    <small>Delivered to You</small>
+                                                    <div class="step-time">⏳ Pending</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Map Actions -->
+                            <div class="order-map-actions">
+                                <button class="btn btn-success btn-sm" onclick="centerOnMyOrder()">
+                                    <i class="fas fa-crosshairs me-1"></i>My Order
+                                </button>
+                                <button class="btn btn-primary btn-sm" onclick="showDeliveryRoute()">
+                                    <i class="fas fa-route me-1"></i>Route
+                                </button>
+                                <button class="btn btn-info btn-sm" onclick="refreshOrderLocation()">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="alertDeliveryPerson()">
+                                    <i class="fas fa-bell me-1"></i>Alert Driver
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Order Location Map Simulation -->
+                        <div class="order-map-simulation">
+                            <div class="order-map-grid">
+                                <!-- Delivery Route Points -->
+                                <div class="route-point warehouse completed" id="warehousePoint">
+                                    <i class="fas fa-warehouse"></i>
+                                    <span class="point-label">Warehouse</span>
+                                </div>
+                                
+                                <div class="route-point sorting completed" id="sortingPoint">
+                                    <i class="fas fa-building"></i>
+                                    <span class="point-label">Sorting Hub</span>
+                                </div>
+                                
+                                <div class="route-point current-order active" id="orderCurrentPoint">
+                                    <i class="fas fa-box-open"></i>
+                                    <span class="point-label">Your Order</span>
+                                </div>
+                                
+                                <div class="route-point destination" id="myLocationPoint">
+                                    <i class="fas fa-home"></i>
+                                    <span class="point-label">Your Address</span>
+                                </div>
+                                
+                                <!-- Delivery Path -->
+                                <div class="delivery-path completed-path" id="completedPath"></div>
+                                <div class="delivery-path active-path" id="activePath"></div>
+                                <div class="delivery-path pending-path" id="pendingPath"></div>
+                                
+                                <!-- Moving Order Indicator -->
+                                <div class="moving-order-indicator" id="movingOrder">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="order-map-legend">
+                                <div class="legend-item">
+                                    <i class="fas fa-warehouse text-secondary"></i>
+                                    <span>Warehouse</span>
+                                </div>
+                                <div class="legend-item">
+                                    <i class="fas fa-building text-info"></i>
+                                    <span>Sorting Hub</span>
+                                </div>
+                                <div class="legend-item">
+                                    <i class="fas fa-box-open text-warning"></i>
+                                    <span>Your Order</span>
+                                </div>
+                                <div class="legend-item">
+                                    <i class="fas fa-home text-success"></i>
+                                    <span>Destination</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success" onclick="getDeliveryDirections()">
+                        <i class="fas fa-directions me-1"></i>Get Directions
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="shareMyOrderLocation()">
+                        <i class="fas fa-share-alt me-1"></i>Share Order Status
+                    </button>
+                    <button type="button" class="btn btn-outline-warning" onclick="setDeliveryPreferences()">
+                        <i class="fas fa-cog me-1"></i>Delivery Preferences
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-Time Location Modal -->
+    <div class="modal fade" id="realTimeLocationModal" tabindex="-1" aria-labelledby="realTimeLocationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="realTimeLocationModalLabel">
+                        <i class="fas fa-map-marked-alt me-2"></i>Real-Time Delivery Tracking
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <!-- Map Container -->
+                    <div id="deliveryMap" class="delivery-map">
+                        <div class="map-overlay">
+                            <div class="map-info-panel">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="delivery-vehicle-icon me-3">
+                                        <i class="fas fa-shipping-fast"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1" id="mapDeliveryPersonName">John Smith</h6>
+                                        <small class="text-muted">Delivery Executive</small>
+                                    </div>
+                                    <div class="ms-auto">
+                                        <span class="badge bg-success pulse-animation">LIVE</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="location-details">
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <div class="location-stat">
+                                                <i class="fas fa-route text-primary"></i>
+                                                <div class="ms-2">
+                                                    <small class="text-muted d-block">Distance</small>
+                                                    <span class="fw-bold" id="currentDistance">2.3 km</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="location-stat">
+                                                <i class="fas fa-clock text-warning"></i>
+                                                <div class="ms-2">
+                                                    <small class="text-muted d-block">ETA</small>
+                                                    <span class="fw-bold" id="currentETA">12 mins</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="location-stat">
+                                                <i class="fas fa-tachometer-alt text-info"></i>
+                                                <div class="ms-2">
+                                                    <small class="text-muted d-block">Speed</small>
+                                                    <span class="fw-bold" id="currentSpeed">25 km/h</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="location-stat">
+                                                <i class="fas fa-map-marker-alt text-success"></i>
+                                                <div class="ms-2">
+                                                    <small class="text-muted d-block">Last Update</small>
+                                                    <span class="fw-bold" id="lastLocationUpdate">30s ago</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <div class="progress mb-2" style="height: 8px;">
+                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" 
+                                             role="progressbar" style="width: 75%" id="deliveryProgress"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">Pickup</small>
+                                        <small class="text-success fw-bold">In Transit</small>
+                                        <small class="text-muted">Delivery</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Map Actions -->
+                            <div class="map-actions">
+                                <button class="btn btn-primary btn-sm" onclick="centerOnDeliveryPerson()">
+                                    <i class="fas fa-crosshairs me-1"></i>Center
+                                </button>
+                                <button class="btn btn-info btn-sm" onclick="showRoute()">
+                                    <i class="fas fa-route me-1"></i>Route
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="refreshLocation()">
+                                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Simulated Map Area -->
+                        <div class="map-simulation">
+                            <div class="map-grid">
+                                <div class="delivery-truck" id="deliveryTruck">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="destination-marker" id="destinationMarker">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div class="route-line" id="routeLine"></div>
+                            </div>
+                            <div class="map-legend">
+                                <div class="legend-item">
+                                    <i class="fas fa-truck text-primary"></i>
+                                    <span>Delivery Vehicle</span>
+                                </div>
+                                <div class="legend-item">
+                                    <i class="fas fa-home text-success"></i>
+                                    <span>Your Location</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="route-indicator"></div>
+                                    <span>Delivery Route</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" onclick="shareLocationWithDeliveryPerson()">
+                        <i class="fas fa-share-alt me-1"></i>Share My Location
+                    </button>
+                    <button type="button" class="btn btn-outline-info" onclick="getDirections()">
+                        <i class="fas fa-directions me-1"></i>Get Directions
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Human Support Escalation Modal -->
+    <div class="modal fade" id="humanSupportModal" tabindex="-1" aria-labelledby="humanSupportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="humanSupportModalLabel">
+                        <i class="fas fa-user-headset me-2"></i>Escalate to Human Support
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="humanSupportForm">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            You're about to connect with our human support team. Please describe your issue below.
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="supportTrackingNumber" placeholder="Tracking Number" required readonly>
+                            <label for="supportTrackingNumber">Tracking Number</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="urgencyLevel" required>
+                                <option value="">Select Urgency Level</option>
+                                <option value="low">Low - General inquiry</option>
+                                <option value="medium">Medium - Delivery concern</option>
+                                <option value="high">High - Urgent delivery issue</option>
+                                <option value="critical">Critical - Emergency situation</option>
+                            </select>
+                            <label for="urgencyLevel">Urgency Level</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <select class="form-select" id="issueCategory" required>
+                                <option value="">Select Issue Category</option>
+                                <option value="delivery-delay">Delivery Delay</option>
+                                <option value="delivery-person">Delivery Person Issue</option>
+                                <option value="wrong-location">Wrong Delivery Location</option>
+                                <option value="package-concern">Package Concern</option>
+                                <option value="communication">Communication Problem</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <label for="issueCategory">Issue Category</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="issueDescription" style="height: 120px" placeholder="Describe your issue in detail" required></textarea>
+                            <label for="issueDescription">Issue Description</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="preferredContact" placeholder="Preferred contact method">
+                            <label for="preferredContact">Preferred Contact Method</label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="allowCallback">
+                            <label class="form-check-label" for="allowCallback">
+                                Allow support team to call me back
+                            </label>
+                        </div>
+                        
+                        <div class="support-options">
+                            <h6 class="fw-bold mb-2">Available Support Options:</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-primary btn-sm w-100" onclick="requestCallback()">
+                                        <i class="fas fa-phone me-1"></i>Request Callback
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-success btn-sm w-100" onclick="startLiveChat()">
+                                        <i class="fas fa-comments me-1"></i>Live Chat
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="humanSupportForm" class="btn btn-danger">
+                        <i class="fas fa-paper-plane me-2"></i>Escalate to Human Support
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delivery Instructions Modal -->
+    <div class="modal fade" id="deliveryInstructionsModal" tabindex="-1" aria-labelledby="deliveryInstructionsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="deliveryInstructionsModalLabel">
+                        <i class="fas fa-sticky-note me-2"></i>Add Delivery Instructions
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="deliveryInstructionsForm">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="instructionTrackingNumber" placeholder="Tracking Number" required readonly>
+                            <label for="instructionTrackingNumber">Tracking Number</label>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Quick Instructions</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 instruction-btn" data-instruction="Leave at front door">
+                                        <i class="fas fa-door-open me-1"></i>Front Door
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 instruction-btn" data-instruction="Ring doorbell twice">
+                                        <i class="fas fa-bell me-1"></i>Ring Doorbell
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 instruction-btn" data-instruction="Call before delivery">
+                                        <i class="fas fa-phone me-1"></i>Call First
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 instruction-btn" data-instruction="Leave with security">
+                                        <i class="fas fa-shield-alt me-1"></i>Security
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" id="customInstructions" style="height: 100px" placeholder="Enter custom delivery instructions"></textarea>
+                            <label for="customInstructions">Custom Instructions</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="alternateContact" placeholder="Alternate Contact Number">
+                            <label for="alternateContact">Alternate Contact (Optional)</label>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="smsUpdates">
+                            <label class="form-check-label" for="smsUpdates">
+                                Send SMS updates to alternate contact
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="deliveryInstructionsForm" class="btn btn-info">
+                        <i class="fas fa-save me-2"></i>Save Instructions
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>
