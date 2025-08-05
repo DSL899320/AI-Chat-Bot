@@ -7,7 +7,7 @@ const demoOrders = {
         weight: '0.5 kg',
         value: '$899.99',
         origin: 'New York Warehouse',
-        destination: '123 Main St, Boston, MA',
+        destination: '12345 Main St, Boston, MA',
         status: 'Out for Delivery',
         estimatedDelivery: '2025-08-05',
         trackingHistory: [
